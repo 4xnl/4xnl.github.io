@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>4xnl · Leitfaden für Themes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Cormorant+SC:wght@400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root,
+  [data-theme="light"] {
+    --ink: #1a1a1a;
+    --paper: #f5f1e8;
+    --cinnabar: #b03a2e;
+    --muted: #6b6459;
+    --line: rgba(26,26,26,0.12);
+    --glow-1: rgba(176,58,46,0.04);
+    --glow-2: rgba(26,26,26,0.05);
+    --code-bg: #ece5d5;
+  }
+
+  [data-theme="dark"] {
+    --ink: #e8e2d4;
+    --paper: #14120e;
+    --cinnabar: #d95a4a;
+    --muted: #8a8274;
+    --line: rgba(232,226,212,0.14);
+    --glow-1: rgba(217,90,74,0.07);
+    --glow-2: rgba(232,226,212,0.04);
+    --code-bg: #1e1b15;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.7;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  body {
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--glow-1), transparent 45%),
+      radial-gradient(circle at 85% 80%, var(--glow-2), transparent 50%);
+    background-attachment: fixed;
+    transition: background-image 0.5s ease;
+  }
+
+  /* Vertikale Seitenleiste */
+  .side {
+    position: fixed;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: 'Cormorant SC', serif;
+    letter-spacing: 0.6em;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    transition: color 0.5s ease;
+  }
+
+  /* Rotes Siegel */
+  .seal {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    background: var(--cinnabar);
+    color: var(--paper);
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    line-height: 1;
+    box-shadow: 0 2px 20px rgba(176,58,46,0.25);
+    border-radius: 2px;
+    z-index: 5;
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  /* Motiv-Umschalter */
+  .theme-toggle {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    transition: color 0.3s, border-color 0.3s, transform 0.4s ease;
+    z-index: 10;
+  }
+  .theme-toggle:hover {
+    color: var(--cinnabar);
+    border-color: var(--cinnabar);
+    transform: rotate(180deg);
+  }
+  .theme-toggle svg { display: block; }
+
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 7rem 2rem 6rem;
+  }
+
+  /* Kopfbereich */
+  header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  header::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 4rem;
+    background: linear-gradient(to bottom, var(--ink), transparent);
+    margin: 3rem auto 0;
+    transition: background 0.5s ease;
+  }
+
+  .kicker {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.55em;
+    text-indent: 0.55em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    transition: color 0.5s ease;
+  }
+
+  h1 {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: clamp(1.7rem, 4.2vw, 2.4rem);
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+    line-height: 1.25;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    transition: color 0.5s ease;
+  }
+
+  .lead {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 55ch;
+    margin: 0 auto;
+    transition: color 0.5s ease;
+  }
+
+  /* Abschnitte */
+  section {
+    margin-top: 4rem;
+    position: relative;
+  }
+  section:first-of-type { margin-top: 0; }
+
+  h2 {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 1.35rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    transition: border-color 0.5s ease;
+  }
+  h2::before {
+    content: attr(data-num);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--cinnabar);
+    font-size: 1rem;
+    margin-right: 0.9rem;
+    letter-spacing: 0.1em;
+  }
+
+  h3 {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    margin-top: 2rem;
+    margin-bottom: 0.85rem;
+    color: var(--ink);
+    transition: color 0.5s ease;
+  }
+
+  h3::before {
+    content: "— ";
+    color: var(--cinnabar);
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    font-size: 1.02rem;
+    transition: color 0.5s ease;
+  }
+
+  ul, ol {
+    margin-bottom: 1.2rem;
+    padding-left: 1.4rem;
+  }
+
+  li {
+    margin-bottom: 0.45rem;
+    font-size: 1.02rem;
+  }
+
+  a {
+    color: var(--cinnabar);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+    word-break: break-word;
+  }
+  a:hover { border-color: var(--cinnabar); }
+
+  strong { font-weight: 500; }
+
+  em { color: var(--muted); }
+
+  /* Tabellen */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.2rem 0 1.6rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    transition: border-color 0.5s ease;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    transition: border-color 0.5s ease;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  th {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: rgba(0,0,0,0.015);
+    transition: color 0.5s ease;
+  }
+
+  [data-theme="dark"] th { background: rgba(255,255,255,0.02); }
+
+  code {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.86em;
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: var(--ink);
+    transition: background 0.5s ease, color 0.5s ease;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--cinnabar);
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+    margin: 1.2rem 0 1.6rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.83rem;
+    line-height: 1.65;
+    transition: background 0.5s ease, border-color 0.5s ease;
+  }
+
+  pre code {
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+    border-radius: 0;
+  }
+
+  /* Blockquote für Hinweise */
+  .note {
+    margin: 1.4rem 0;
+    padding: 1rem 1.3rem;
+    border-left: 2px solid var(--cinnabar);
+    background: rgba(176,58,46,0.04);
+    font-style: italic;
+    color: var(--muted);
+    border-radius: 2px;
+    transition: color 0.5s ease, background 0.5s ease;
+  }
+
+  [data-theme="dark"] .note { background: rgba(217,90,74,0.06); }
+
+  /* Inhaltsverzeichnis */
+  .toc {
+    margin: 3rem 0;
+    padding: 1.8rem 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    transition: border-color 0.5s ease;
+  }
+
+  .toc-title {
+    font-family: 'Cormorant SC', serif;
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 1.3rem;
+    transition: color 0.5s ease;
+  }
+
+  .toc ol {
+    list-style: none;
+    padding-left: 0;
+    columns: 2;
+    column-gap: 2.5rem;
+  }
+
+  @media (max-width: 620px) {
+    .toc ol { columns: 1; }
+  }
+
+  .toc li {
+    margin-bottom: 0.5rem;
+    font-size: 0.92rem;
+    break-inside: avoid;
+  }
+
+  .toc li::before {
+    counter-increment: toc;
+    content: counter(toc, decimal-leading-zero);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--cinnabar);
+    margin-right: 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .toc ol { counter-reset: toc; }
+
+  .toc a {
+    color: var(--ink);
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .toc a:hover {
+    color: var(--cinnabar);
+    border-color: var(--cinnabar);
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 6rem;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Cormorant SC', serif;
+    font-weight: 400;
+    transition: color 0.5s ease;
+  }
+  footer::before {
+    content: "◯";
+    display: block;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--cinnabar);
+    letter-spacing: 0;
+  }
+
+  footer a {
+    color: var(--muted);
+    margin: 0 0.4rem;
+  }
+  footer a:hover { color: var(--cinnabar); }
+
+  @media (max-width: 640px) {
+    .side { display: none; }
+    .seal { width: 44px; height: 44px; font-size: 1.3rem; top: 1rem; right: 1rem; }
+    .theme-toggle { top: 1rem; left: 1rem; width: 40px; height: 40px; }
+    main { padding: 5rem 1.5rem 3rem; }
+    h1 { letter-spacing: 0.15em; text-indent: 0.15em; }
+    h2 { font-size: 1.15rem; }
+    pre { font-size: 0.78rem; padding: 0.9rem 1rem; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+  <button id="themeToggle" class="theme-toggle" aria-label="Motiv wechseln" title="Motiv wechseln">
+    <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+    </svg>
+    <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+         style="display:none;">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+    </svg>
+  </button>
+
+  <div class="seal">四</div>
+  <div class="side">Leitfaden · Themes V2 · CubicLauncher</div>
+
+  <main>
+
+    <header>
+      <p class="kicker">CubicLauncher · Themes V2</p>
+      <h1>Leitfaden für KI</h1>
+      <p class="lead">
+        Anleitung zum Erstellen vollständiger, stimmiger und importierfähiger Themes –
+        gedacht zum Anhängen an eine KI zusammen mit einem Referenzbild.
+      </p>
+    </header>
+
+    <div class="toc">
+      <p class="toc-title">Inhalt</p>
+      <ol>
+        <li><a href="#s1">Hauptanweisung für die KI</a></li>
+        <li><a href="#s2">Quellen</a></li>
+        <li><a href="#s3">Referenz in visuelle Entscheidungen übersetzen</a></li>
+        <li><a href="#s4">Dateien des Pakets</a></li>
+        <li><a href="#s5">Variablen und Präfixe</a></li>
+        <li><a href="#s6">Scharfer Hintergrund und lesbare Oberflächen</a></li>
+        <li><a href="#s7">Eigene Icons, die angewendet werden</a></li>
+        <li><a href="#s8">Leichte Animationen</a></li>
+        <li><a href="#s9">Verhalten der Oberfläche schützen</a></li>
+        <li><a href="#s10">Ressourcen und Typografie</a></li>
+        <li><a href="#s11">Validierung vor der Abgabe</a></li>
+        <li><a href="#s12">Verpackung und Abgabe</a></li>
+        <li><a href="#s13">Prompt für die KI</a></li>
+      </ol>
+    </div>
+
+    <p>
+      Dieser Leitfaden ist dafür gedacht, einer KI zusammen mit einem Referenzbild angehängt zu werden,
+      um ein vollständiges, stimmiges und importierfähiges Theme anzufordern. Er beschreibt einen
+      Arbeitsablauf und Qualitätskriterien; er ist kein installierbares Theme für sich.
+    </p>
+
+    <p class="note">
+      Technische Referenz: Dokumentation und Code des Branches <code>develop</code>, eingesehen am
+      10. September 2026. Bevor du ein Theme für eine andere Version erstellst, prüfe erneut den
+      Theme-Leser und die Komponenten dieser Version. Selektoren und Icon-Bezeichner können sich ändern.
+    </p>
+
+    <!-- 1 -->
+    <section id="s1">
+      <h2 data-num="I">Hauptanweisung für die KI</h2>
+      <p>
+        Handle als UI-Designer und Theme-Entwickler für CubicLauncher. Erstelle ein funktionsfähiges
+        V2-Theme auf Grundlage des Bildes und des gewünschten Stils. Liefere das Paket und eine kurze
+        Beschreibung. Beschränke dich nicht darauf zu erklären, wie es geht, wenn du die Dateien
+        erzeugen kannst.
+      </p>
+      <p>
+        Prüfe zuerst die offizielle Dokumentation und, falls es Widersprüche gibt, gleiche die Beispiele
+        mit dem Code der Zielversion ab. Erfinde keine TOML-Felder, CSS-Variablen, Selektoren oder
+        Icon-Namen. Bewahre die Funktionen des Launchers: Instanzauswahl, Ausklappen der Sidebar,
+        Steuerelemente, Menüs und Navigation.
+      </p>
+      <p>
+        Analysiere die Referenz, um eine eigene visuelle Identität aufzubauen. Das Bild soll die
+        Palette, den Kontrast, die Formen und einige Icon-Details beeinflussen. Vermeide es, dasselbe
+        generische Design nur durch einen anderen Wallpaper zu verwenden.
+      </p>
+      <p>Für diesen Stil gelten – sofern der Nutzer nichts anderes verlangt – folgende Vorgaben:</p>
+      <ul>
+        <li>Minimalistisches Design mit sichtbaren Hintergründen und lesbarem Text.</li>
+        <li>Kein Blur und keine unscharfen Glaseffekte.</li>
+        <li>Ein kleiner Satz eigener Icons, hauptsächlich für die Sidebar.</li>
+        <li>Dezente Animationen bei Interaktion, ohne fortlaufende dekorative Effekte.</li>
+        <li>Original-Logos von Minecraft, Loadern und Anbietern bleiben erhalten.</li>
+        <li>Lokale Ressourcen und ein kleines Paket, ohne dass beim Anwenden Downloads nötig sind.</li>
+      </ul>
+    </section>
+
+    <!-- 2 -->
+    <section id="s2">
+      <h2 data-num="II">Quellen, die du konsultieren solltest</h2>
+      <ul>
+        <li><a href="https://dev.cubiclauncher.org/docs/es-ES/guias/hacer-themes" target="_blank" rel="noopener">Offizieller Theme-Leitfaden</a></li>
+        <li><a href="https://github.com/CubicLauncherDevs/CubicLauncher/blob/develop/src-tauri/src/commands/themes/v2.rs" target="_blank" rel="noopener">V2-Leser und -Konvertierung</a></li>
+        <li><a href="https://github.com/CubicLauncherDevs/CubicLauncher/blob/develop/src-tauri/src/commands/themes/mod.rs" target="_blank" rel="noopener">Import, Laden und Validierung von Ressourcen</a></li>
+        <li><a href="https://github.com/CubicLauncherDevs/CubicLauncher/blob/develop/src/styles/shared/reset.css" target="_blank" rel="noopener">Basis-Variablen für die Darstellung</a></li>
+        <li><a href="https://github.com/CubicLauncherDevs/CubicLauncher/blob/develop/src/lib/api/themeManager.ts" target="_blank" rel="noopener">Anwendung des Themes im Frontend</a></li>
+        <li><a href="https://github.com/CubicLauncherDevs/CubicLauncher/blob/develop/src/lib/icons/registry.ts" target="_blank" rel="noopener">Icon-Registry</a></li>
+        <li><a href="https://github.com/CubicLauncherDevs/CubicLauncher/blob/develop/src/lib/icons/Icon.svelte" target="_blank" rel="noopener">Icon-Renderer</a></li>
+      </ul>
+      <p>
+        Wenn du Zugriff auf das Repository hast, sieh dir auch
+        <code>src/styles/shared/layout.css</code>, <code>src/styles/shared/perf.css</code> und die
+        Komponenten an, die du anpassen möchtest. Halte die eingesehene Version bzw. den Commit fest.
+        Behaupte keine Kompatibilität mit Versionen, die du nicht überprüft hast.
+      </p>
+    </section>
+
+    <!-- 3 -->
+    <section id="s3">
+      <h2 data-num="III">Referenz in visuelle Entscheidungen übersetzen</h2>
+      <p>Bevor du CSS schreibst, lege fest:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Element</th><th>Notwendige Entscheidung</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Hintergrund</td><td>Welcher Bereich enthält die Figur und wie bleibt sie sichtbar, wenn mit <code>cover</code> zugeschnitten wird.</td></tr>
+            <tr><td>Oberflächen</td><td>Eine Basisfarbe und zwei passende Höhenstufen in Abstimmung mit der Illustration.</td></tr>
+            <tr><td>Akzent</td><td>Eine in der Referenz erkennbare Farbe für Aktionen und Auswahl.</td></tr>
+            <tr><td>Text</td><td>Haupt- und Sekundärfarben, die mit Oberflächen und Bild kontrastieren.</td></tr>
+            <tr><td>Rahmen</td><td>Ein dezenter Ton und konsistente Radien.</td></tr>
+            <tr><td>Detail</td><td>Ein kleines Motiv aus der Referenz, ohne es über die ganze Oberfläche zu wiederholen.</td></tr>
+            <tr><td>Bewegung</td><td>Welche Aktion Feedback erhält und wie lange es dauert.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Beispiel einer künstlerischen Richtung: Für eine Klassenzimmer-Szene im Abendlicht nutzt du
+        Kakao für Panels, pudriges Rosa für Akzente und Elfenbein für Texte. Ein Brillenmotiv kann in
+        Vorschau oder Suche auftauchen, während die übrigen Icons erkennbar bleiben.
+      </p>
+      <p>
+        Übernimm diese Palette nicht automatisch für ein anderes Bild. Verdecke die Figur nicht mit
+        einem übermäßig dunklen Overlay. Bewahre das Seitenverhältnis des Bildes und entferne nicht
+        seine Signatur.
+      </p>
+    </section>
+
+    <!-- 4 -->
+    <section id="s4">
+      <h2 data-num="IV">Dateien des Pakets</h2>
+      <p>Nimm diese Dateien in einen einzigen Theme-Ordner auf:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Beispielpfad</th><th>Funktion</th></tr></thead>
+          <tbody>
+            <tr><td><code>MiTema/Meta.toml</code></td><td>Pflicht-Metadaten.</td></tr>
+            <tr><td><code>MiTema/Definition.toml</code></td><td>Variablen, Bild, Schriften und Icons.</td></tr>
+            <tr><td><code>MiTema/Inject.css</code></td><td>Spezifische Anpassungen, falls benötigt.</td></tr>
+            <tr><td><code>MiTema/background.jpeg</code></td><td>Tatsächlich im Paket enthaltenes Bild.</td></tr>
+            <tr><td><code>MiTema/icons/preview.svg</code></td><td>Vorschau des Themes.</td></tr>
+            <tr><td><code>MiTema/icons/create.svg</code></td><td>Beispiel eines eigenen Icons.</td></tr>
+            <tr><td><code>MiTema/theme.md</code></td><td>Beschreibung, Installation und Credits.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Verwende relative Pfade mit <code>/</code>, einfache Namen und exakt dieselbe
+        Groß-/Kleinschreibung wie die Dateien. Füge keine Pfade deines Computers oder Verweise auf
+        Ressourcen ein, die du nicht mitlieferst.
+      </p>
+
+      <h3>Wichtiger Fehler: umhüllende TOML-Tabellen</h3>
+      <p>
+        Im eingesehenen Leser wird <code>Meta.toml</code> direkt als <code>ThemeMeta</code> interpretiert
+        und <code>Definition.toml</code> als <code>ThemeDef</code>. Daher gilt:
+      </p>
+      <ul>
+        <li><code>Meta.toml</code> trägt <code>name</code>, <code>author</code> usw. auf der obersten Ebene, <strong>ohne <code>[meta]</code></strong>.</li>
+        <li><code>Definition.toml</code> trägt <code>[colors]</code>, <code>[background]</code> usw. <strong>ohne Präfix <code>theme.</code></strong>.</li>
+      </ul>
+      <p>
+        Einige Beispiele der Dokumentation zeigen <code>[meta]</code> und <code>[theme.colors]</code>.
+        Übernimm sie nicht ohne Prüfung des Lesers: Sie können <code>missing field name</code>
+        verursachen oder dazu führen, dass Definitionen ignoriert werden und der Standardstil erscheint.
+        Die umhüllenden Strukturen, die in Tests mit einem vollständigen Objekt verwendet werden,
+        bedeuten nicht, dass die getrennten Dateien sie tragen müssen.
+      </p>
+
+      <h3>Beispiel für Meta.toml</h3>
+      <pre><code>name = "Mein Theme"
+author = "DeinAlias"
+version = "1.0.0"
+description = "Eine kurze Beschreibung der visuellen Identität."
+injects_css = true</code></pre>
+      <p>
+        Verwende einen kurzen Namen. Wenn die Zielversion Grenzen vorgibt, prüfe sie im Validator;
+        behandle eine Längenempfehlung nicht als universelle Grenze.
+      </p>
+    </section>
+
+    <!-- 5 -->
+    <section id="s5">
+      <h2 data-num="V">Variablen und Präfixe</h2>
+      <p>
+        Schreibe kein <code>--</code> in die TOML-Schlüssel. Der Launcher fügt die Präfixe hinzu:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Abschnitt und Schlüssel</th><th>CSS-Ergebnis</th></tr></thead>
+          <tbody>
+            <tr><td><code>[colors] accent</code></td><td><code>--accent</code></td></tr>
+            <tr><td><code>[text] primary</code></td><td><code>--text-primary</code></td></tr>
+            <tr><td><code>[borders] radius</code></td><td><code>--border-radius</code></td></tr>
+            <tr><td><code>[layout] sidebar-width</code></td><td><code>--sidebar-width</code></td></tr>
+            <tr><td><code>[shadows] shadow-lg</code></td><td><code>--shadow-lg</code></td></tr>
+            <tr><td><code>[backgrounds] card</code></td><td><code>--bg-card</code></td></tr>
+            <tr><td><code>[backdrop] modal</code></td><td><code>--backdrop-blur-modal</code>, in Pixel umgerechnet</td></tr>
+            <tr><td><code>[others] icon-filter</code></td><td><code>--icon-filter</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <code>[background]</code> konfiguriert das Bild; es erzeugt über diesen Mechanismus keine
+        Variablen. Vermeide es, dieselbe Variable aus mehreren Abschnitten zu definieren: zum Beispiel
+        kollidieren <code>[colors] bg-card</code> und <code>[backgrounds] card</code>.
+      </p>
+      <p>
+        Die Maps für Farben, Text, Rahmen, Layout, Schatten und andere Werte erwarten Strings. Die
+        Werte von <code>[backdrop]</code> sind Zahlen, zum Beispiel <code>modal = 0.0</code>, nicht
+        <code>modal = "0px"</code>.
+      </p>
+
+      <h3>Basis für Definition.toml</h3>
+      <p>
+        Diese Basis zeigt die korrekte Struktur. Passe die Werte an und erweitere die Zustände mit
+        den Variablen der Zielversion. Du musst die Datei <code>background.jpeg</code> liefern.
+      </p>
+      <pre><code>[background]
+reference_path = "background.jpeg"
+image_blur = 0.0
+image_opacity = 0.85
+
+[colors]
+bg-main = "#201b1b"
+bg-sidebar = "#282122"
+bg-sidebar-gradient = "linear-gradient(180deg, #302627, #231f20)"
+bg-card = "rgba(40,33,34,0.94)"
+bg-input = "#251f20"
+bg-item-active = "#463236"
+bg-overlay = "rgba(18,14,15,0.72)"
+bg-surface = "#33292b"
+accent = "#e6b1a8"
+accent-rgb = "230, 177, 168"
+accent-hover = "#f2c5b9"
+accent-text = "#2b2021"
+accent-primary = "#e6b1a8"
+surface-rgb = "230, 177, 168"
+surface-hover = "rgba(230,177,168,0.12)"
+surface-active = "rgba(230,177,168,0.18)"
+surface-selected = "#3d2d31"
+surface-card = "rgba(40,33,34,0.94)"
+surface-input = "#2c2425"
+surface-dropdown = "#302628"
+scrollbar-track = "transparent"
+scrollbar-thumb = "#76575a"
+scrollbar-thumb-hover = "#c4928c"
+
+[text]
+primary = "#f7e9df"
+secondary = "#d5bdb5"
+muted = "#b99f9b"
+tertiary = "#b99f9b"
+
+[borders]
+color = "#594246"
+radius = "12px"
+radius-sm = "7px"
+
+[layout]
+sidebar-width = "248px"
+font-size-base = "14px"
+
+[backdrop]
+modal = 0.0
+dropdown = 0.0
+panel = 0.0
+overlay = 0.0
+float = 0.0
+viewer = 0.0
+
+[others]
+border = "#594246"
+icon-filter = "none"</code></pre>
+      <p>
+        Vervollständige auch die Farben für Benachrichtigungen, Fehler, Warnungen und
+        Ausführungszustände, wo nötig. Opfere ihre Bedeutung nicht, nur um einen einzigen Akzent zu
+        verwenden.
+      </p>
+    </section>
+
+    <!-- 6 -->
+    <section id="s6">
+      <h2 data-num="VI">Scharfer Hintergrund und lesbare Oberflächen</h2>
+      <p>
+        <code>image_blur = 0.0</code> entfernt den für das Bild konfigurierten Weichzeichner, aber
+        nicht unbedingt den, den eine Komponente selbst anwendet. Im eingesehenen Code gibt es einen
+        festen <code>backdrop-filter: blur(12px)</code> in der Instanz-Kopfzeile.
+      </p>
+      <p>
+        Wenn der Nutzer null Blur im gesamten Theme verlangt, ist dieser Block bewusst global:
+      </p>
+      <pre><code>*, *::before, *::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html .background-overlay {
+  filter: none !important;
+  background-position: 64% center;
+}</code></pre>
+      <p>
+        Der Selektor des Hintergrunds entfernt außerdem die <code>brightness()</code>-Abdunklung des
+        eingesehenen Basisstils. Passe die Deckkraft an und füge bei Bedarf einen lokal begrenzten
+        statischen Verlauf hinzu, um die Lesbarkeit zu erhalten. Der Wert <code>64%</code> ist ein
+        Beispiel: Wähle die Position passend zur Komposition.
+      </p>
+      <p>
+        Wende <code>filter: none</code> nicht auf alle Elemente an: Du könntest unbeabsichtigt die
+        Behandlung von Icons oder anderen Zuständen verändern. Verwende für schwebende Panels
+        ausreichend opake Oberflächen; das Entfernen des Blurs darf Menüs und Texte nicht unleserlich
+        machen.
+      </p>
+    </section>
+
+    <!-- 7 -->
+    <section id="s7">
+      <h2 data-num="VII">Eigene Icons, die tatsächlich angewendet werden</h2>
+      <p>
+        Prüfe den Bezeichner in <code>registry.ts</code> und in der Komponente, die ihn verwendet.
+        Nimm nicht an, dass alle Schaltflächen der Sidebar eine Gruppe <code>sidebar</code> nutzen.
+      </p>
+      <p>In dieser Durchsicht geprüfte Bezeichner:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Bezeichner</th><th>Verwendung</th></tr></thead>
+          <tbody>
+            <tr><td><code>nav:create</code></td><td>Instanz erstellen.</td></tr>
+            <tr><td><code>nav:settings</code></td><td>Einstellungen.</td></tr>
+            <tr><td><code>nav:sliders</code></td><td>Werkzeuge oder Schnellmenü.</td></tr>
+            <tr><td><code>nav:edit</code></td><td>Bearbeiten.</td></tr>
+            <tr><td><code>ui:download</code></td><td>Downloads.</td></tr>
+            <tr><td><code>ui:chevron-left</code></td><td>Pfeil nach links, zum Einklappen.</td></tr>
+            <tr><td><code>ui:chevron-right</code></td><td>Pfeil nach rechts; prüfe, ob das konkrete Steuerelement die Registry nutzt.</td></tr>
+            <tr><td><code>ui:search</code></td><td>Suche.</td></tr>
+            <tr><td><code>ui:play</code></td><td>Spielen.</td></tr>
+            <tr><td><code>ui:pin</code></td><td>Instanz anheften.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Eine Komponente, die ihr SVG direkt importiert, reagiert möglicherweise nicht auf die
+        Icon-Registry. Versprich keinen Ersatz, ohne dies zu prüfen.
+      </p>
+      <p>
+        Beispiel, das du nur dann zu <code>Definition.toml</code> hinzufügst, wenn du diese Ressourcen
+        mitlieferst:
+      </p>
+      <pre><code>[icons]
+preview = "icons/preview.svg"
+
+[icons.nav]
+create = "icons/create.svg"
+settings = "icons/settings.svg"
+
+[icons.ui]
+download = "icons/download.svg"
+search = "icons/search.svg"</code></pre>
+      <p>
+        Zeichne einfache SVGs mit einheitlichem <code>viewBox</code> – zum Beispiel
+        <code>0 0 24 24</code> – und lesbaren Strichen bei 14–20 px. Vermeide Skripte, entfernte
+        Ressourcen und winzige Details.
+      </p>
+      <p>
+        Der eingesehene Renderer behandelt SVGs als Masken: Nur ihre Silhouette zählt, die Farbe
+        liefert die Oberfläche. Erwarte nicht, dass ein mehrfarbiges SVG in diesen Steuerelementen
+        mehrfarbig erscheint. Prüfe geerbte Filter, wenn Icons schwarz oder invertiert erscheinen;
+        beschränke die Korrektur auf das betroffene Steuerelement.
+      </p>
+      <p>
+        Bewahre die Marken von Modrinth, CurseForge, Vanilla, Fabric, Forge, NeoForge und Quilt, außer
+        es wird ausdrücklich verlangt. Ein eigenes Theme muss nicht alle Icons ersetzen.
+      </p>
+    </section>
+
+    <!-- 8 -->
+    <section id="s8">
+      <h2 data-num="VIII">Leichte Animationen</h2>
+      <p>
+        Bevorzuge Reaktion auf Hover, Klick oder Auswahl. Als Ausgangspunkt nutze 120–200 ms und
+        Verschiebungen von 1–2 px.
+      </p>
+      <ul>
+        <li>Animiere bevorzugt <code>transform</code> und <code>opacity</code>.</li>
+        <li>Animiere nicht fortlaufend Blur, große Schatten, Hintergründe oder Layout-Dimensionen.</li>
+        <li>Vermeide <code>transition: all</code>, Partikel, Parallax und unendliche dekorative Pulsierungen.</li>
+        <li>Füge kein dauerhaftes <code>will-change</code> zu Listen oder vollständigen Panels hinzu.</li>
+        <li>Bewahre die funktionalen Ladeanzeigen.</li>
+        <li>Respektiere sowohl die Systemeinstellung als auch die Option des Launchers.</li>
+      </ul>
+      <p>Beispiel auf Basis geprüfter Selektoren:</p>
+      <pre><code>@keyframes theme-selection {
+  from { opacity: .72; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-reduce-motion]) .sidebar .tools-btn .icon-svg {
+    transition: transform 150ms ease-out;
+  }
+
+  html:not([data-reduce-motion]) .sidebar .tools-btn:hover .icon-svg {
+    transform: translateY(-1px) rotate(-5deg);
+  }
+
+  html:not([data-reduce-motion]) .sidebar .tools-btn:active .icon-svg {
+    transform: scale(.92);
+  }
+
+  html:not([data-reduce-motion]) .instance-item.active {
+    animation: theme-selection 180ms ease-out 1;
+  }
+}</code></pre>
+      <p>
+        Dieser Block ist ein Teilbeispiel: Passe ebenso die Steuerelemente des kompakten Modus an, die
+        tatsächlich existieren. Verschiebe nicht die Schaltfläche zum Ausklappen oder Einklappen und
+        ändere nicht ihre Abmessungen oder Position, um Feedback zu geben. Animiere bei Bedarf ein
+        inneres Icon.
+      </p>
+      <p>
+        Behaupte keine FPS-Verbesserung, ohne sie gemessen zu haben. Du darfst sagen, dass kostspielige
+        Effekte vermieden wurden und die Animationen kurz sind, aber unterscheide diese Entscheidung
+        von einem Performance-Nachweis.
+      </p>
+    </section>
+
+    <!-- 9 -->
+    <section id="s9">
+      <h2 data-num="IX">Verhalten der Oberfläche schützen</h2>
+      <p>
+        Verwende Variablen für allgemeine Änderungen und spezifische Selektoren für Ausnahmen.
+        Vermeide globale Regeln auf <code>button</code>, <code>aside</code>, <code>img</code> oder
+        <code>div</code>, die Größen, Positionen oder Transformationen ändern.
+      </p>
+      <p>Prüfe insbesondere:</p>
+      <ul>
+        <li>Sidebar ausgeklappt und kompakt, mit den Steuerelementen an ihrer ursprünglichen Position.</li>
+        <li>Normale, ausgewählte, angeheftete und laufende Instanzen.</li>
+        <li>Schaltflächen normal, Hover, gedrückt, deaktiviert und mit Tastaturfokus.</li>
+        <li>Formulare, Menüs, Dialoge, Fehler, Downloads und Benachrichtigungen.</li>
+        <li>Lesbarer Text auf den hellsten Bereichen des Wallpapers.</li>
+      </ul>
+      <p>
+        Erscheint die Auswahl als weißes Rechteck, prüfe <code>--accent</code>,
+        <code>--surface-selected</code>, <code>--surface-active</code> und die Pseudo-Elemente der
+        Komponente. Ändere die Oberfläche oder den konkreten Indikator; verstecke nicht
+        undifferenziert die Pseudo-Elemente und entferne nicht den Auswahlzustand.
+      </p>
+    </section>
+
+    <!-- 10 -->
+    <section id="s10">
+      <h2 data-num="X">Ressourcen und Typografie</h2>
+      <p>
+        In der eingesehenen Implementierung unterstützt der Hintergrund bis zu 25 MiB und rasterisierte
+        Icons bis zu 2 MiB. Das sind Grenzen, keine empfohlenen Größen. Ein einfaches SVG und ein gut
+        komprimiertes Bild reichen meist aus.
+      </p>
+      <p>
+        Bewahre das Originalbild, wenn es bereits eine vernünftige Größe hat. Komprimiere es nicht
+        mehrfach und verändere die Illustration nicht ohne Not. Stelle sicher, dass das tatsächliche
+        Format zur Erweiterung passt.
+      </p>
+      <p>
+        Wenn keine eigene Schrift verlangt wird, kannst du die des Launchers behalten. Wenn du eine
+        einbindest, prüfe ihre Lizenz, nimm die Datei und erforderliche Hinweise auf und prüfe
+        spanische Zeichen. Deklariere nur Dateien, die tatsächlich existieren:
+      </p>
+      <pre><code>[[fonts]]
+family = "MeineSchrift"
+src = "fonts/MeineSchrift-Regular.woff2"
+format = "woff2"
+weight = "400"
+style = "normal"</code></pre>
+      <p>
+        Die Variable <code>font-family</code> aus <code>[others]</code> muss denselben Namen und einen
+        Fallback verwenden. Deklariere keine Schriftschnitte, die du nicht mitgeliefert hast oder die
+        die variable Schrift nicht abdeckt.
+      </p>
+    </section>
+
+    <!-- 11 -->
+    <section id="s11">
+      <h2 data-num="XI">Validierung vor der Abgabe</h2>
+
+      <h3>Statische Prüfung</h3>
+      <ol>
+        <li>Analysiere beide TOML mit einem echten Parser, zum Beispiel <code>tomllib</code> aus Python 3.11 oder höher.</li>
+        <li>Prüfe, dass <code>name</code> auf oberster Ebene steht und dass die visuellen Abschnitte ebenfalls keine <code>theme</code>-Umhüllung haben.</li>
+        <li>Verifiziere, dass alle Pfade zu Bildern, Icons und Schriften innerhalb des Ordners existieren.</li>
+        <li>Prüfe SVGs mit einem XML-Parser und Bilder mit einem Decoder.</li>
+        <li>Suche nach Kollisionen zwischen Variablen und nach Icon-Namen, die nicht existieren.</li>
+        <li>Validiere die CSS-Syntax; Klammern zu zählen ersetzt keinen Parser oder Browser.</li>
+        <li>Prüfe den Inhalt der ZIP und ihre Integrität.</li>
+      </ol>
+
+      <h3>Prüfung im Launcher</h3>
+      <p>
+        Importiere das Paket und teste die Zustände aus Abschnitt IX. Prüfe wenn möglich auch ein
+        kleines Fenster, etwa 1366 × 768, und ein großes. Aktiviere die Bewegungsreduzierung, um zu
+        prüfen, dass deine Effekte deaktiviert werden.
+      </p>
+      <p>
+        Ein HTML-Mockup kann helfen, Farben zu prüfen, beweist aber nicht, dass das Theme innerhalb
+        von Tauri funktioniert. Wenn du es nicht ausführen kannst, sage es in der Abgabe klar:
+        „Statisch validiert; visuelle Prüfung im Launcher steht aus.“
+      </p>
+      <p class="note">Erfinde keine Screenshots oder Testberichte.</p>
+    </section>
+
+    <!-- 12 -->
+    <section id="s12">
+      <h2 data-num="XII">Verpackung und Abgabe</h2>
+      <p>
+        Erstelle eine ZIP mit einer einzigen Theme-Definition. Für diesen Ablauf wird die ZIP mit der
+        Erweiterung <code>.cbth</code> abgegeben; prüfe die vom Importeur der Zielversion akzeptierten
+        Erweiterungen. Der offizielle Leitfaden dokumentiert auch die Verteilung als <code>.zip</code>.
+      </p>
+      <p>Beispiel für eine reproduzierbare Verpackung, ausgeführt neben dem Ordner <code>MiTema</code>:</p>
+      <pre><code>from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
+
+root = Path("MiTema")
+assert (root / "Meta.toml").is_file()
+assert (root / "Definition.toml").is_file()
+
+with ZipFile("MiTema.cbth", "w", ZIP_DEFLATED) as archive:
+    for path in sorted(root.rglob("*")):
+        if path.is_file():
+            archive.write(path, path.relative_to(root.parent))
+
+with ZipFile("MiTema.cbth") as archive:
+    assert archive.testzip() is None</code></pre>
+      <p>
+        Füge weder das Repository des Launchers noch Caches, Abhängigkeiten oder temporäre Dateien ein.
+        Halte <code>theme.md</code> kurz: visuelle Identität, Installation, Credits und reale
+        Einschränkungen. Wenn du dasselbe Theme aktualisierst, bewahre seine Identität und erhöhe die
+        Version; prüfe, wie der Launcher Duplikate behandelt.
+      </p>
+      <p>
+        Die endgültige Antwort soll die Datei, eine kurze Zusammenfassung der Änderungen und den
+        Umfang der Tests enthalten. Veröffentliche nichts und öffne keinen Pull Request, es sei denn,
+        der Nutzer verlangt es.
+      </p>
+    </section>
+
+    <!-- 13 -->
+    <section id="s13">
+      <h2 data-num="XIII">Prompt für die KI</h2>
+      <p class="note">
+        Erstelle ein vollständiges V2-Theme für CubicLauncher nach dem beigefügten Leitfaden und der
+        offiziellen Dokumentation. Nutze das beigefügte Bild als Hintergrund und passe das Design an
+        [Anime, Figur oder Ästhetik] an. Ich möchte ein minimalistisches, stimmiges und erkennbares
+        Ergebnis: ohne Blur, mit guter Lesbarkeit, einigen eigenen SVG-Icons für die Sidebar und
+        kurzen, optimierten Animationen. Bewahre die Logos der Loader und Anbieter. Prüfe das
+        tatsächliche TOML-Schema, die Icon-Bezeichner und die Pfade aller Ressourcen. Liefere das
+        importierfähige Paket und ein kurzes theme.md. Gib an, was du geprüft hast und was aussteht;
+        behaupte nicht, den Launcher getestet zu haben, wenn du ihn nicht ausgeführt hast.
+      </p>
+    </section>
+
+    <footer>
+      <a href="index.html">Startseite</a> · 4xnl · MMXXV
+    </footer>
+
+  </main>
+
+<script>
+  const themeToggle = document.getElementById('themeToggle');
+  const iconMoon    = document.getElementById('iconMoon');
+  const iconSun     = document.getElementById('iconSun');
+
+  function motivSetzen(modus) {
+    document.body.setAttribute('data-theme', modus);
+    iconMoon.style.display = modus === 'dark' ? 'none' : 'block';
+    iconSun.style.display  = modus === 'dark' ? 'block' : 'none';
+    try { localStorage.setItem('4xnl-theme', modus); } catch (_) {}
+  }
+
+  (function initMotiv() {
+    let gespeichert = null;
+    try { gespeichert = localStorage.getItem('4xnl-theme'); } catch (_) {}
+    if (gespeichert === 'light' || gespeichert === 'dark') {
+      motivSetzen(gespeichert);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      motivSetzen('dark');
+    } else {
+      motivSetzen('light');
+    }
+  })();
+
+  themeToggle.addEventListener('click', () => {
+    const aktuell = document.body.getAttribute('data-theme');
+    motivSetzen(aktuell === 'dark' ? 'light' : 'dark');
+  });
+</script>
+</body>
+</html>
