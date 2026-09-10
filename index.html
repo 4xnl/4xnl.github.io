@@ -49,7 +49,6 @@
     transition: background-image 0.5s ease;
   }
 
-  /* Vertikale Seitenleiste */
   .side {
     position: fixed;
     left: 2rem;
@@ -64,7 +63,6 @@
     transition: color 0.5s ease;
   }
 
-  /* Rotes Siegel (unten rechts) */
   .seal {
     position: fixed;
     top: 2rem;
@@ -84,7 +82,6 @@
     transition: background 0.5s ease, color 0.5s ease;
   }
 
-  /* Motiv-Umschalter (oben links) */
   .theme-toggle {
     position: fixed;
     top: 2rem;
@@ -295,10 +292,16 @@
     color: var(--cinnabar);
   }
 
-  .author-link {
+  /* Buttons unterhalb der Listen */
+  .actions {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .action-link {
     display: block;
     text-align: center;
-    margin-top: 2rem;
     font-family: 'Cormorant SC', serif;
     font-size: 0.75rem;
     letter-spacing: 0.35em;
@@ -307,11 +310,22 @@
     text-decoration: none;
     padding: 0.9rem 1rem;
     border: 1px solid var(--cinnabar);
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
   }
-  .author-link:hover {
+  .action-link:hover {
     background: var(--cinnabar);
     color: var(--paper);
+  }
+
+  /* Alternative dezente Variante für den Leitfaden-Button */
+  .action-link.subtle {
+    color: var(--muted);
+    border-color: var(--line);
+  }
+  .action-link.subtle:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
   }
 
   .loading, .error, .empty {
@@ -343,6 +357,17 @@
     letter-spacing: 0;
   }
 
+  footer a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  footer a:hover {
+    color: var(--cinnabar);
+    border-color: var(--cinnabar);
+  }
+
   @media (max-width: 640px) {
     .side { display: none; }
     .seal { width: 44px; height: 44px; font-size: 1.3rem; top: 1rem; right: 1rem; }
@@ -371,7 +396,7 @@
   </button>
 
   <div class="seal">四</div>
-  <div class="side">Themen · Projekte · 4xnl</div>
+  <div class="side">Themen · Projekte · Leitfaden</div>
 
   <main>
     <header>
@@ -393,11 +418,13 @@
       <div class="list" id="themes">
         <div class="loading">— Wird geladen —</div>
       </div>
-      <a class="author-link"
-         href="https://www.cubiclauncher.org/themes/author/4xnl"
-         target="_blank" rel="noopener">
-        Alle Themen auf CubicLauncher ansehen
-      </a>
+      <div class="actions">
+        <a class="action-link"
+           href="https://www.cubiclauncher.org/themes/author/4xnl"
+           target="_blank" rel="noopener">
+          Alle Themen auf CubicLauncher ansehen
+        </a>
+      </div>
     </section>
 
     <!-- Projekte -->
@@ -408,7 +435,19 @@
       </div>
     </section>
 
-    <footer>4xnl · Alle Rechte vorbehalten</footer>
+    <!-- Leitfaden -->
+    <section class="section">
+      <h2 class="section-title">Für Theme-Entwickler</h2>
+      <div class="actions">
+        <a class="action-link subtle" href="anleitung.html">
+          Leitfaden für Themes V2 öffnen
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <a href="anleitung.html">Leitfaden</a> · 4xnl · MMXXV
+    </footer>
   </main>
 
 <script>
@@ -428,13 +467,11 @@
 
   function motivSetzen(modus) {
     document.body.setAttribute('data-theme', modus);
-    // Sonne zeigen, wenn dunkel aktiv, sonst Mond
     iconMoon.style.display = modus === 'dark' ? 'none' : 'block';
     iconSun.style.display  = modus === 'dark' ? 'block' : 'none';
     try { localStorage.setItem('4xnl-theme', modus); } catch (_) {}
   }
 
-  // Gespeichertes Motiv laden, sonst Systemeinstellung verwenden
   (function initMotiv() {
     let gespeichert = null;
     try { gespeichert = localStorage.getItem('4xnl-theme'); } catch (_) {}
